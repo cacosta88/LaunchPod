@@ -7,13 +7,14 @@ type TTokenBalanceProps = {
   className?: string;
   isEns?: boolean;
   isOp?: boolean;
+  isG?: boolean;
 };
 
 /**
  * Display (ETH & USD) balance of an ETH address.
  */
-export const TokenBalance = ({ address, className = "", isEns, isOp }: TTokenBalanceProps) => {
-  const { balance, price, isTokenBalance } = useTokenBalance({ address, isEns, isOp });
+export const TokenBalance = ({ address, className = "", isEns, isOp, isG }: TTokenBalanceProps) => {
+  const { balance, price, isTokenBalance, onToggleBalance } = useTokenBalance({ address, isEns, isOp, isG });
   const { tokenSymbol } = useErc20();
 
   if (!address || balance === null) {
@@ -30,17 +31,19 @@ export const TokenBalance = ({ address, className = "", isEns, isOp }: TTokenBal
   return (
     <button
       className={`btn btn-sm btn-ghost flex flex-col font-normal items-center hover:bg-transparent ${className}`}
-      // onClick={onToggleBalance}
+      onClick={onToggleBalance}
     >
       <div className="w-full flex items-center ">
         {isTokenBalance ? (
           <>
             <span> {balance?.toFixed(2)}</span>
+
             {isEns && <Image className=" ml-1" src="/assets/ensLogo.png" alt="ens logo" width={25} height={25} />}
             {isOp && <Image className=" ml-1" src="/assets/opLogo.png" alt="op logo" width={25} height={25} />}
             {/* {isEns && <span className="text-base ml-1">ENS</span>}
             {isOp && <span className=" ml-1">OP</span>} */}
-            {!isEns && !isOp && <div className="text-base  ml-1">{tokenSymbol}</div>}
+            {isG && <Image className=" ml-1" src="/assets/grtLogo.png" alt="grt logo" width={25} height={25} />}
+            {!isEns && !isOp && !isG && <div className="text-base  ml-1">{tokenSymbol}</div>}
           </>
         ) : (
           <>
